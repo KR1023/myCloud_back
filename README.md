@@ -1,5 +1,12 @@
 ### MyCloud Backend
 
+- .env
+
+```
+GOOGLE_CLIENT_ID={google_client_id}
+GOOGLE_CLIENT_SECRET={google_client_secret}
+```
+
 - user API
 
 ```
