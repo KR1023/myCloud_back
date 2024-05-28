@@ -56,11 +56,11 @@ export class AuthController {
         return req.user;
     }
 
+    
     @Get('logout')
     logout(@Request() req, @Response() res){
         req.logout(() => {
-            
-            res.send('로그아웃 되었습니다.');
+            res.status(200).send({statusCode: 200, message: '로그아웃되었습니다.'});
         });
     }
 
