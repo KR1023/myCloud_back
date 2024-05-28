@@ -1,0 +1,24 @@
+### Create User
+POST http://localhost:4000/user
+content-type: application/json
+
+{
+    "email": "ysh@test.com",
+    "username" : "yoo",
+    "password" : "test1234"
+}
+
+### Find User
+GET http://localhost:4000/user/test@test.com
+
+### Update User
+PUT http://localhost:4000/user/ysh1
+content-type: application/json
+
+{
+    "username": "sh",
+    "password" : "test5555"
+}
+
+### Delete User
+DELETE http://localhost:4000/user/ysh1
