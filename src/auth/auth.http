@@ -53,4 +53,4 @@ Get http://localhost:4000/auth/logout
 Content-Type: application/json
 
 ### Test Guard2
-GET http://localhost:4000/auth/test-guard2
+GET http://localhost:4000/auth/check-auth

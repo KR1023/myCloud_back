@@ -19,6 +19,14 @@ async function bootstrap() {
   );
   app.use(passport.initialize());
   app.use(passport.session());
+  /*
+  app.enableCors({
+    origin: true,
+    methods: 'GET, HEAD, PUT, PATCH, POST, DELETE, OPTIONS',
+    credentials: true
+  });
+  */
+ 
   await app.listen(4000);
 }
 
