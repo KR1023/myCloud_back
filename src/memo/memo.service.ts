@@ -23,10 +23,28 @@ export class MemoService {
 
     async findMemo(memoId: number){
         return this.memoRepository.findOne({
+            relations: {
+                user: true
+            },
             where: {
                 memoId: memoId
             }
         });
     }
 
+    async findMemoList(userEmail: string): Promise<Memo[]>{
+        /*
+        return await this.memoRepository
+            .createQueryBuilder('memo')
+            // .leftJoinAndSelect('memos.user', 'user')
+            .where('memo.userEmail = :userEmail', {userEmail})
+            .orderBy('memo.createdDt', 'DESC')
+            .getMany();
+        */
+       return await this.memoRepository
+            .query(`SELECT * 
+                    FROM my_cloud.memo 
+                    WHERE userEmail = '${userEmail}'
+                    ORDER BY createdDt DESC;`);
+    }
 }
