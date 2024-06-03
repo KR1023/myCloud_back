@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Memo } from './memo.entity';
-import MemoCreateDto from './dto/memo.create.dto';
+import { CreateMemoDto, UpdateMemoDto } from './dto/memo.dto';
 import { User } from 'src/user/user.entity';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class MemoService {
         private memoRepository: Repository<Memo>
     ){}
 
-    async createMemo(memo: MemoCreateDto, user: User): Promise<Memo>{
+    async createMemo(memo: CreateMemoDto, user: User): Promise<Memo>{
         const savingMemo = new Memo();
         savingMemo.subject = memo.subject;
         savingMemo.content = memo.content;
@@ -23,13 +23,16 @@ export class MemoService {
 
     async findMemo(memoId: number){
         return this.memoRepository.findOne({
-            relations: {
-                user: true
-            },
             where: {
                 memoId: memoId
             }
         });
+       /*
+       return this.memoRepository
+            .createQueryBuilder("memo")
+            .where('memo.memoId = :memoId', {memoId})
+            .getOne();
+        */  
     }
 
     async findMemoList(userEmail: string): Promise<Memo[]>{
@@ -46,5 +49,17 @@ export class MemoService {
                     FROM my_cloud.memo 
                     WHERE userEmail = '${userEmail}'
                     ORDER BY createdDt DESC;`);
+    }
+
+    async updateMemo(memoId: number, updateObj: UpdateMemoDto): Promise<Memo>{
+        const orgMemo = await this.findMemo(memoId);
+
+        orgMemo.subject = updateObj.subject;
+        orgMemo.content = updateObj.content;
+        orgMemo.tags = updateObj.tags;
+        orgMemo.updatedDt = new Date();
+        
+        this.memoRepository.save(orgMemo);
+        return orgMemo;
     }
 }

@@ -1,0 +1,32 @@
+### POST create memo
+POST http://localhost:4000/memo
+Content-Type: application/json
+
+{
+    "subject": "테스트 메모3",
+    "content": "테스트입니다.333",
+    "tags": "태그1,태그2",
+    "userEmail": "test@mycloud.com"
+}
+
+### GET memo
+GET http://localhost:4000/memo/1
+Content-Type: application/json
+
+### GET memo list
+GET http://localhost:4000/memo
+Content-Type: application/json
+
+{
+    "userEmail": "test@mycloud.com"
+}
+
+### PATCH memo
+PATCH http://localhost:4000/memo/1
+Content-Type: application/json
+
+{
+    "subject": "업데이트",
+    "content": "업데이트 내용",
+    "tags": "태그1,태그2"
+}

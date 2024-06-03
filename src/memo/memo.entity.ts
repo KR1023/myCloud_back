@@ -6,13 +6,13 @@ export class Memo {
     @PrimaryGeneratedColumn()
     memoId: number;
 
-    @Column()
+    @Column({type: "varchar", length: 100})
     subject: string;
 
-    @Column()
+    @Column({type: "text", nullable: true})
     content: string;
 
-    @Column()
+    @Column({nullable: true})
     tags: string;
 
     @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP'})

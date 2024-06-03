@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Body, Param } from '@nestjs/common';
 import { MemoService } from './memo.service';
-import MemoCreateDto from './dto/memo.create.dto';
+import { CreateMemoDto, UpdateMemoDto } from './dto/memo.dto';
 import { UserService } from 'src/user/user.service';
 import { Memo } from './memo.entity';
 
@@ -9,7 +9,7 @@ export class MemoController {
     constructor(private memoService: MemoService, private userService:UserService){}
 
     @Post()
-    async createMemo(@Body() memo:MemoCreateDto): Promise<any>{
+    async createMemo(@Body() memo:CreateMemoDto): Promise<any>{
         // return this.memoService.createMemo(memo);
         const user = await this.userService.findUser(memo.userEmail);
         const response = await this.memoService.createMemo(memo, user);
@@ -24,5 +24,10 @@ export class MemoController {
     @Get(":memo_id")
     async findMemo(@Param("memo_id") memo_id: string){
         return this.memoService.findMemo(parseInt(memo_id));
+    }
+
+    @Patch(":memo_id")
+    async updateMemo(@Param("memo_id") memoId: string, @Body() updateObj: UpdateMemoDto){
+        return this.memoService.updateMemo(parseInt(memoId), updateObj);
     }
 }
