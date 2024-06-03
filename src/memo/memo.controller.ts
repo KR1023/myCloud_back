@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param } from '@nestjs/common';
 import { MemoService } from './memo.service';
 import { CreateMemoDto, UpdateMemoDto } from './dto/memo.dto';
 import { UserService } from 'src/user/user.service';
@@ -29,5 +29,11 @@ export class MemoController {
     @Patch(":memo_id")
     async updateMemo(@Param("memo_id") memoId: string, @Body() updateObj: UpdateMemoDto){
         return this.memoService.updateMemo(parseInt(memoId), updateObj);
+    }
+
+    @Delete(":memo_id")
+    async deleteMemo(@Param("memo_id") memo_id: string): Promise<any>{
+        await this.memoService.deleteMemo(parseInt(memo_id));
+        return {message: "memo is deleted.", memo_id};
     }
 }

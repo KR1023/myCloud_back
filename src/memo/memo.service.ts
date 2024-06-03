@@ -62,4 +62,8 @@ export class MemoService {
         this.memoRepository.save(orgMemo);
         return orgMemo;
     }
+
+    async deleteMemo(memoId: number): Promise<void>{
+        this.memoRepository.delete(memoId);
+    }
 }
