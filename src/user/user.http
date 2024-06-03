@@ -9,7 +9,7 @@ content-type: application/json
 }
 
 ### Find User
-GET http://localhost:4000/user/test@test.com
+GET http://localhost:4000/user/test@mycloud.com
 
 ### Update User
 PUT http://localhost:4000/user/ysh1
