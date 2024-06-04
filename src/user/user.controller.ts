@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Delete, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Delete, Param, Request } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 
@@ -23,7 +23,8 @@ export class UserController {
     }
 
     @Delete('/:email')
-    async deleteUser(@Param('email') email: string){
+    async deleteUser(@Request() req, @Param('email') email: string){
+        req.logout(() => {});
         return await this.userService.deleteUser(email);
     }
 }
