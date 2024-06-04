@@ -23,7 +23,7 @@ export class UserController {
     }
 
     @Delete('/:email')
-    deleteUser(@Param('email') email: string){
-        return this.userService.deleteUser(email);
+    async deleteUser(@Param('email') email: string){
+        return await this.userService.deleteUser(email);
     }
 }

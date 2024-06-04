@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { UpdateUserDto } from './dto/user.dto';
 import * as bcrypt from 'bcrypt';
@@ -34,7 +34,7 @@ export class UserService {
         return this.userRepository.save(user);
     }
 
-    deleteUser(email: string){
+    deleteUser(email: string): Promise<DeleteResult>{
         return this.userRepository.delete({email});
     }
 

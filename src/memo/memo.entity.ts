@@ -21,6 +21,9 @@ export class Memo {
     @Column({ type: 'datetime', nullable: true})
     updatedDt: Date;
 
-    @ManyToOne(() => User, (user) => user.memos)
+    @ManyToOne(() => User, (user) => user.memos, {
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+    })
     user: User;
 }
