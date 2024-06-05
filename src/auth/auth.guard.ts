@@ -55,3 +55,13 @@ export class GoogleAuthGuard extends AuthGuard('google'){
         return result;
     }
 }
+
+@Injectable()
+export class KakaoAuthGuard extends AuthGuard('kakao'){
+    async canActivate(context: any): Promise<boolean>{
+        const result = (await super.canActivate(context)) as boolean;
+        const request = context.switchToHttp().getRequest();
+        await super.logIn(request);
+        return result;
+    }
+}

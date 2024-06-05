@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Request, Response, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/user/dto/user.dto';
-import { AuthenticatedGuard, LocalAuthGuard, GoogleAuthGuard } from './auth.guard';
+import { AuthenticatedGuard, LocalAuthGuard, GoogleAuthGuard, KakaoAuthGuard } from './auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -38,9 +38,21 @@ export class AuthController {
     @Get('google')
     @UseGuards(GoogleAuthGuard)
     async googleAuthRedirect(@Request() req, @Response() res){
-        const { user } = req;
+        // const { user } = req;
         // return res.send(user)
-        return res.redirect('http://localhost:3000/');
+        return res.redirect(process.env.FRONT_ADDRESS);
 
+    }
+
+    @Get('to-kakao')
+    @UseGuards(KakaoAuthGuard)
+    async kakaoAuth(@Request() req){}
+
+    @Get('kakao')
+    @UseGuards(KakaoAuthGuard)
+    async kakaoAuthRedirect(@Request() req, @Response() res){
+        // const { user } = req;
+        // return res.send(user);
+        return res.redirect(process.env.FRONT_ADDRESS);
     }
 }
