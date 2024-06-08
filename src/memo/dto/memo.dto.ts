@@ -4,9 +4,11 @@ export class CreateMemoDto{
     @IsString()
     subject: string;
 
+    @IsOptional()
     @IsString()
     content: string;
 
+    @IsOptional()
     @IsString()
     tags: string;
 
