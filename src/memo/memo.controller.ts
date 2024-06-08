@@ -16,8 +16,9 @@ export class MemoController {
         return {message: "creating memo is successful", subject: response.subject};
     }
 
-    @Get()
+    @Post('/list')
     async findMemoList(@Body() reqData): Promise<Memo[]>{
+        console.log(reqData);
         return this.memoService.findMemoList(reqData.userEmail);
     }
 
