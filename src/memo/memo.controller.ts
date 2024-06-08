@@ -18,7 +18,6 @@ export class MemoController {
 
     @Post('/list')
     async findMemoList(@Body() reqData): Promise<Memo[]>{
-        console.log(reqData);
         return this.memoService.findMemoList(reqData.userEmail);
     }
 
