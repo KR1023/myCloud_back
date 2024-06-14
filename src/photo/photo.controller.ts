@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Request } from '@nestjs/common';
 import { UploadedFile, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { multerOption } from 'src/lib/multer.options.photo';
@@ -44,8 +44,8 @@ export class PhotoController {
         return files;
     }
 
-    @Get('/list')
-    getPhotoList(@Body() req): Promise<Photo[]>{
-        return this.photoService.getPhotoList(req.userEmail);
+    @Get('/list/:userEmail')
+    getPhotoList(@Param("userEmail") userEmail): Promise<Photo[]>{
+        return this.photoService.getPhotoList(userEmail);
     }
 }
