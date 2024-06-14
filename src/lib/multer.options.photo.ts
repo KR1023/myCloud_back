@@ -9,9 +9,7 @@ export const multerOption = {
         destination: async (req, file, cb) => {
             try{
                 const { userEmail } = req.body;
-                console.log('userEmail', userEmail);
                 if(!fs.existsSync(join(__dirname, '../../uploads/photo/', userEmail))){
-                    console.log(join(__dirname, '../../uploads/photo/' + userEmail) + ' dsent exists');
                     await fs_promise.mkdir(join(__dirname, '../../uploads/photo/', userEmail));
                 }
                 // cb(null, process.env.MEMO_IMAGE_UPLOAD_PATH)

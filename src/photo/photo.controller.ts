@@ -6,6 +6,7 @@ import * as fs_promise from 'fs/promises';
 import * as fs from 'fs';
 import { PhotoService } from './photo.service';
 import { UserService } from 'src/user/user.service';
+import { Photo } from './photo.entity';
 import { join } from 'path';
 
 @Controller('photo')
@@ -34,11 +35,17 @@ export class PhotoController {
         for(const file of files){
             try{
                 console.log('file', file);
+                console.log(file.path.replaceAll('\\\\', '/'));
                 this.photoService.uploadPhotos(user, file);
             }catch(e){
                 console.error(e);
             }
         }
         return files;
+    }
+
+    @Get('/list')
+    getPhotoList(@Body() req): Promise<Photo[]>{
+        return this.photoService.getPhotoList(req.userEmail);
     }
 }

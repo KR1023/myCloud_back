@@ -22,4 +22,12 @@ export class PhotoService {
         photo.user = user;
         return await this.photoRepository.save(photo);
     }
+
+    async getPhotoList(userEmail: string): Promise<Photo[]>{
+        return this.photoRepository
+            .query(`SELECT *
+                    FROM my_cloud.photo
+                    WHERE userEmail = '${userEmail}'
+                    ORDER BY uploadedDate DESC`);
+    }
 }
