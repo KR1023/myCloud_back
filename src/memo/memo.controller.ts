@@ -5,7 +5,7 @@ import { MemoService } from './memo.service';
 import { CreateMemoDto, UpdateMemoDto } from './dto/memo.dto';
 import { UserService } from 'src/user/user.service';
 import { Memo } from './memo.entity';
-import { multerOption } from 'src/lib/multer.options';
+import { multerOption } from 'src/lib/multer.options.memo';
 import { join } from 'path';
 
 @Controller('memo')
@@ -46,7 +46,9 @@ export class MemoController {
     fileUpload(@UploadedFile() file: Express.Multer.File){
         // const IMG_URL = `${process.env.MEMO_IMAGE_UPLOAD_PATH}\\${file.filename}`;
         // const IMG_URL = `${join(__dirname, '../..', 'uploads')}/${file.filename}`;
-        const IMG_URL = `http://localhost:4000/uploads/${file.filename}`;
+        const IMG_URL = `http://localhost:4000/uploads/memo/${file.filename}`;
         return ({url: IMG_URL});
     }
+
+    
 }

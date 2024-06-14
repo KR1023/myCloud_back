@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryColumn, OneToMany } from "typeorm";
 import { Memo } from '../memo/memo.entity';
+import { Photo } from "src/photo/photo.entity";
 
 @Entity()
 export class User{
@@ -20,4 +21,7 @@ export class User{
 
     @OneToMany(() => Memo, (memo) => memo.user)
     memos: Memo[];
+
+    @OneToMany(() => Photo, (photo) => photo.user)
+    photos: Photo[];
 }

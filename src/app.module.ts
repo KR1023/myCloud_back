@@ -10,6 +10,8 @@ import { MemoModule } from './memo/memo.module';
 import { Memo } from './memo/memo.entity';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { PhotoModule } from './photo/photo.module';
+import { Photo } from './photo/photo.entity';
 
 @Module({
   imports: [
@@ -24,14 +26,15 @@ import { ServeStaticModule } from '@nestjs/serve-static';
         username: 'root',
         password: 'xhdtls12',
         database: 'my_cloud',
-        entities: [User, Memo],
+        entities: [User, Memo, Photo],
         synchronize: true,
         logging: true
     }),
     UserModule,
     AuthModule,
     ConfigModule.forRoot(),
-    MemoModule
+    MemoModule,
+    PhotoModule
 ],
   controllers: [AppController],
   providers: [AppService],
