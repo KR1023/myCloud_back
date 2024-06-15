@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Request } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param, Request, Header, StreamableFile } from '@nestjs/common';
 import { UploadedFile, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { multerOption } from 'src/lib/multer.options.photo';
@@ -47,5 +47,26 @@ export class PhotoController {
     @Get('/list/:userEmail')
     getPhotoList(@Param("userEmail") userEmail): Promise<Photo[]>{
         return this.photoService.getPhotoList(userEmail);
+    }
+
+    @Get('/download/:photo_id')
+    @Header('Content-Type', 'application/jpeg')
+    @Header('Content-Disposition', 'attachement;')
+    async downloadPhoto(@Param('photo_id') photo_id): Promise<StreamableFile>{
+        const photo = await this.photoService.getPhotoInfo(parseInt(photo_id));
+        const photoPath = photo.path;
+        // const file = fs.createReadStream(join(__dirname, '../../uploads/photo/test@mycloud.com/vanilla_js_1718415109288.png'));
+        const file = fs.createReadStream(photoPath);
+        return new StreamableFile(file);
+    }
+
+    @Delete('/delete/:photo_id')
+    async deletePhoto(@Param('photo_id') photoId: string){
+        const filePath = await this.photoService.deletePhoto(parseInt(photoId));
+        fs_promise.rm(filePath)
+            .then(() => {
+                console.log(`${filePath} is deleted.`);
+            });
+        return {code: 201, message: 'delete success'};
     }
 }

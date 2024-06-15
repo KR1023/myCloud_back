@@ -30,4 +30,22 @@ export class PhotoService {
                     WHERE userEmail = '${userEmail}'
                     ORDER BY uploadedDate DESC`);
     }
+
+    async getPhotoInfo(photo_id: number): Promise<Photo>{
+        return this.photoRepository.findOne({
+            where: {
+                photo_id
+            }
+        });
+    }
+
+    async deletePhoto(photo_id: number): Promise<string>{
+        const photo =  await this.photoRepository.findOne({
+            where: {
+                photo_id
+            }
+        });
+        await this.photoRepository.delete({photo_id});
+        return photo.path;
+    }
 }
