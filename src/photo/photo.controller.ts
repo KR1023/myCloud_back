@@ -8,10 +8,12 @@ import { PhotoService } from './photo.service';
 import { UserService } from 'src/user/user.service';
 import { Photo } from './photo.entity';
 import { join } from 'path';
+import * as JSZip from 'jszip';
 
 @Controller('photo')
 export class PhotoController {
     constructor(private photoService: PhotoService, private userService: UserService){}
+
 
     @Post('/upload/test')
     @UseInterceptors(FileInterceptor('photo', multerOption))
@@ -60,9 +62,38 @@ export class PhotoController {
         return new StreamableFile(file);
     }
 
+    @Post('/download/photos')
+    @Header('Content-Type', 'application/zip')
+    @Header('Content-Disposition', 'attachement;')
+    async downloadPhotos(@Body() req): Promise<StreamableFile>{
+        const timer = ms => new Promise(res => setTimeout(res, ms));
+
+        const zip = new JSZip();
+        const userEmail = req.userEmail;
+        const photoIdArr = req.idList;
+        const photos = await this.photoService.getPhotosInfo(photoIdArr);
+
+        const zipPath = join(__dirname, '../../uploads/photo', userEmail, 'photos.zip');
+
+        for(const photo of photos){
+            zip.file(photo.filename, fs.readFileSync(photo.path));
+        }
+        
+            zip
+            .generateNodeStream({streamFiles: true})
+            .pipe(fs.createWriteStream(zipPath))
+            .on('finish', async () => {
+                console.log(new Date().toLocaleString(), 'photos.zip is written.');
+            });
+
+            await timer(1000);
+            const resZip = fs.createReadStream(zipPath);
+            return new StreamableFile(resZip);
+    }
+
     @Delete('/delete/:photo_id')
-    async deletePhoto(@Param('photo_id') photoId: string){
-        const filePath = await this.photoService.deletePhoto(parseInt(photoId));
+    async deletePhoto(@Param('photo_id') photo_id: string): Promise<any>{
+        const filePath = await this.photoService.deletePhoto(parseInt(photo_id));
         fs_promise.rm(filePath)
             .then(() => {
                 console.log(`${filePath} is deleted.`);

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { Photo } from './photo.entity';
 import { User } from 'src/user/user.entity';
 
@@ -37,6 +37,13 @@ export class PhotoService {
                 photo_id
             }
         });
+    }
+
+    async getPhotosInfo(idList: number[]): Promise<Photo[]>{
+        console.log(idList);
+        return await this.photoRepository.findBy({
+            photo_id: In(idList)
+        })
     }
 
     async deletePhoto(photo_id: number): Promise<string>{
