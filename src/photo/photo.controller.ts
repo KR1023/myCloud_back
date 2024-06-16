@@ -41,8 +41,9 @@ export class PhotoController {
     }
 
     @Get('/list/:userEmail')
-    getPhotoList(@Param("userEmail") userEmail): Promise<Photo[]>{
-        return this.photoService.getPhotoList(userEmail);
+    getPhotoList(@Param("userEmail") userEmail, @Request() req): Promise<Photo[]>{
+        const { startDate, endDate } = req.query;
+        return this.photoService.getPhotoList(userEmail, startDate, endDate);
     }
 
     @Get('/download/:photo_id')

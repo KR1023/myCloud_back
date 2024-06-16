@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
+import { Repository, In, Between } from 'typeorm';
 import { Photo } from './photo.entity';
 import { User } from 'src/user/user.entity';
 import { DeleteResult } from 'typeorm';
@@ -24,12 +24,21 @@ export class PhotoService {
         return await this.photoRepository.save(photo);
     }
 
-    async getPhotoList(userEmail: string): Promise<Photo[]>{
-        return this.photoRepository
+    async getPhotoList(userEmail: string, startDate: string, endDate: string): Promise<Photo[]>{
+        if(startDate && endDate){
+            return this.photoRepository
+                .query(`SELECT *
+                        FROM my_cloud.photo
+                        WHERE userEmail = '${userEmail}'
+                            AND uploadedDate BETWEEN CONCAT('${startDate}', ' 00:00:00') AND CONCAT('${endDate}', ' 23:59:59')
+                        ORDER BY uploadedDate DESC;`);
+        }else {
+            return this.photoRepository
             .query(`SELECT *
                     FROM my_cloud.photo
                     WHERE userEmail = '${userEmail}'
                     ORDER BY uploadedDate DESC`);
+        }
     }
 
     async getPhotoInfo(photo_id: number): Promise<Photo>{
