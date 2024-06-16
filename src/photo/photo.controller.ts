@@ -18,10 +18,8 @@ export class PhotoController {
     @Post('/upload/test')
     @UseInterceptors(FileInterceptor('photo', multerOption))
     uploadTest(@UploadedFile() file: Express.Multer.File){
-        console.log(file);
         fs_promise.readFile(file.path).then((data) => {
             const meta = fs.statSync(file.path);
-            console.log(meta);
         })
         return file;
     }
@@ -29,15 +27,11 @@ export class PhotoController {
     @Post('/upload/photos')
     @UseInterceptors(FilesInterceptor('photo', 50, multerOption))
     async uploadPhotos(@UploadedFiles() files: Array<Express.Multer.File>, @Body() body: any){
-        console.log(files);
         const { userEmail } = body;
-        console.log(userEmail);
         const user = await this.userService.findUser(userEmail);
         
         for(const file of files){
             try{
-                console.log('file', file);
-                console.log(file.path.replaceAll('\\\\', '/'));
                 this.photoService.uploadPhotos(user, file);
             }catch(e){
                 console.error(e);
@@ -99,5 +93,22 @@ export class PhotoController {
                 console.log(`${filePath} is deleted.`);
             });
         return {code: 201, message: 'delete success'};
+    }
+
+    @Post('/delete-photos')
+    async deletePhotos(@Body() req): Promise<any>{
+        const idList = req;
+        try{
+            const photos = await this.photoService.getPhotosInfo(idList);
+            for(const photo of photos){
+                const photoPath = photo.path;
+                await fs_promise.rm(photoPath);
+            }
+            
+            return this.photoService.deletePhotos(idList);
+        }catch(e){
+            console.error(e);
+            return {"code": 500, message: "Internal Server Error"};
+        }
     }
 }

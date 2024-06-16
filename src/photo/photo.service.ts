@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { Photo } from './photo.entity';
 import { User } from 'src/user/user.entity';
+import { DeleteResult } from 'typeorm';
 
 @Injectable()
 export class PhotoService {
@@ -40,7 +41,6 @@ export class PhotoService {
     }
 
     async getPhotosInfo(idList: number[]): Promise<Photo[]>{
-        console.log(idList);
         return await this.photoRepository.findBy({
             photo_id: In(idList)
         })
@@ -54,5 +54,9 @@ export class PhotoService {
         });
         await this.photoRepository.delete({photo_id});
         return photo.path;
+    }
+
+    async deletePhotos(idList: number[]): Promise<DeleteResult>{
+        return await this.photoRepository.delete(idList);
     }
 }
