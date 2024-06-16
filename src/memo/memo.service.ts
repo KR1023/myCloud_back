@@ -35,7 +35,7 @@ export class MemoService {
         */  
     }
 
-    async findMemoList(userEmail: string): Promise<Memo[]>{
+    async findMemoList(userEmail: string, searchText: string): Promise<Memo[]>{
         /*
         return await this.memoRepository
             .createQueryBuilder('memo')
@@ -44,11 +44,21 @@ export class MemoService {
             .orderBy('memo.createdDt', 'DESC')
             .getMany();
         */
-       return await this.memoRepository
+       if(searchText){
+        return await this.memoRepository
+            .query(`SELECT * 
+                    FROM my_cloud.memo
+                    WHERE userEmail = '${userEmail}' AND
+                        subject LIKE ('%${searchText}%') OR content LIKE ('%${searchText}%')
+                    ORDER BY createdDt DESC;`);
+       }else{
+        return await this.memoRepository
             .query(`SELECT * 
                     FROM my_cloud.memo 
                     WHERE userEmail = '${userEmail}'
                     ORDER BY createdDt DESC;`);
+       }
+       
     }
 
     async updateMemo(memoId: number, updateObj: UpdateMemoDto): Promise<Memo>{

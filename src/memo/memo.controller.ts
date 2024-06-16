@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, Request } from '@nestjs/common';
 import { UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MemoService } from './memo.service';
@@ -21,8 +21,9 @@ export class MemoController {
     }
 
     @Post('/list')
-    async findMemoList(@Body() reqData): Promise<Memo[]>{
-        return this.memoService.findMemoList(reqData.userEmail);
+    async findMemoList(@Body() req): Promise<Memo[]>{
+        const { userEmail, searchText } = req;
+        return this.memoService.findMemoList(userEmail, searchText);
     }
 
     @Get(":memo_id")
