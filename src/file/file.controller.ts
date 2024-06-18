@@ -1,10 +1,15 @@
-import { Controller, Get, Post, Patch, Body, Param, Response, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Body, Param, Response, HttpException, HttpStatus, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { join, basename, extname } from 'path';
 import * as fs from 'fs';
 import * as fs_promise from 'fs/promises';
+import { multerOption } from 'src/lib/multer.options.file';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { FileService } from './file.service';
+import { UserService } from 'src/user/user.service';
 
 @Controller('file')
 export class FileController {
+    constructor(private fileService: FileService, private userService: UserService){}
     
     @Post('/list/:userEmail')
     async getDirList(@Param("userEmail") userEmail: string, @Body() req, @Response() res){
@@ -17,10 +22,11 @@ export class FileController {
             if(!fs.existsSync(defaultPath)){
                 fs.mkdirSync(defaultPath);
             }
-            
+
             const dirList = fs.readdirSync(join(defaultPath, currDir), {withFileTypes: true});
             for(const el of dirList){
                 const currEl = join(el.path, el.name);
+                
                 resList = resList.concat({"element" : el.name, "isDir": el.isDirectory(), "dirPath": el.path, "filePath": currEl, "ext": extname(currEl)});
             }
 
@@ -74,7 +80,6 @@ export class FileController {
     @Patch('rename')
     async renameFile(@Body() req, @Response() res){
         const { oldPath, dirPath, newName } = req;
-        console.log(oldPath, dirPath, newName);
         try{
            await fs_promise.rename(oldPath, join(dirPath, newName));
             return res.status(200).send({message: 'name is changed.'});
@@ -88,4 +93,21 @@ export class FileController {
             return res.status(500).send(e.message);
         }
     }
+
+    @Post('/upload')
+    @UseInterceptors(FileInterceptor('file', multerOption))
+    async uploadFile(@UploadedFile() file: Express.Multer.File, @Body() req, @Response() res){
+        // const { userEmail } = req;
+        // const user = await this.userService.findUser(userEmail);
+
+        try{
+            // if(file)
+            //     this.fileService.uploadFile(user, file);
+            return res.status(200).send('upload success');
+        }catch(e){
+            console.error(e);
+            return res.status(500).send(e.message);
+        }
+    }
+
 }

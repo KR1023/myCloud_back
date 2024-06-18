@@ -12,6 +12,7 @@ import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { PhotoModule } from './photo/photo.module';
 import { Photo } from './photo/photo.entity';
+import { File } from './file/file.entity';
 import { FileModule } from './file/file.module';
 
 @Module({
