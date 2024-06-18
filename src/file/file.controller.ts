@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Response, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Body, Param, Response, HttpException, HttpStatus } from '@nestjs/common';
 import { join, basename, extname } from 'path';
 import * as fs from 'fs';
 import * as fs_promise from 'fs/promises';
@@ -67,6 +67,24 @@ export class FileController {
                 e.message = "file or directory is not found."
                 return res.status(404).send(e.message);
             }
+            return res.status(500).send(e.message);
+        }
+    }
+
+    @Patch('rename')
+    async renameFile(@Body() req, @Response() res){
+        const { oldPath, dirPath, newName } = req;
+        console.log(oldPath, dirPath, newName);
+        try{
+           await fs_promise.rename(oldPath, join(dirPath, newName));
+            return res.status(200).send({message: 'name is changed.'});
+        }catch(e){
+            console.error(e);
+            if(e.code === 'ENOENT'){
+                e.message = 'target is not found.';
+                return res.status(404).send(e.message);
+            }
+
             return res.status(500).send(e.message);
         }
     }
