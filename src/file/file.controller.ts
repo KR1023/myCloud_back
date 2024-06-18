@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Patch, Body, Param, Response, HttpException, HttpStatus, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Body, Param, Response, HttpException, HttpStatus, UseInterceptors, UploadedFile, Header } from '@nestjs/common';
+import { StreamableFile } from '@nestjs/common';
 import { join, basename, extname } from 'path';
 import * as fs from 'fs';
 import * as fs_promise from 'fs/promises';
@@ -108,6 +109,14 @@ export class FileController {
             console.error(e);
             return res.status(500).send(e.message);
         }
+    }
+
+    @Post('/download')
+    @Header('Content-Disposition', 'attachement;')
+    async downloadFile(@Body() req): Promise<StreamableFile>{
+        const { filePath } = req;
+        const file = fs.createReadStream(filePath);
+        return new StreamableFile(file);
     }
 
 }
