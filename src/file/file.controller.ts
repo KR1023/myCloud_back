@@ -34,6 +34,7 @@ export class FileController {
             return res.status(200).send(resList);
         }catch(e){
             console.error(e);
+            return res.status(500).send(e.message);
         }
     }
 
@@ -60,10 +61,10 @@ export class FileController {
     @Post('/file-attr')
     async getFileAttr(@Body() req, @Response() res){
         const { filePath } = req;
-        
         try{
             const filename = basename(filePath);
             // const fileAttr = fs.readdirSync(filePath, { withFileTypes: true});
+            
             const fileAttr = fs.statSync(filePath);
             const { size, mtime, ctime, birthtime } = fileAttr;
             const resAttr = {"filename": filename, size, birthtime, mtime, ctime};
@@ -91,6 +92,33 @@ export class FileController {
                 return res.status(404).send(e.message);
             }
 
+            return res.status(500).send(e.message);
+        }
+    }
+
+    @Post('delete')
+    async deleteFile(@Body() req, @Response() res){
+        const { filePath } = req;
+
+        try{
+            const isDir = fs.statSync(filePath).isDirectory();
+            if(isDir){
+                const fileList = fs.readdirSync(filePath);
+                if(fileList.length > 0){
+                    throw new HttpException('dir is not empty.', HttpStatus.NOT_ACCEPTABLE);
+                }else{
+                    fs.rmdirSync(filePath);
+                }
+            }else{
+                fs.rmSync(filePath);
+            }
+            return res.status(200).send("delete success.");
+        }catch(e){
+            if(e.status === 406){
+                e.message = '디렉토리가 비어있지 않습니다.';
+                return res.status(406).send(e.message);
+            }
+            console.error(e);
             return res.status(500).send(e.message);
         }
     }
