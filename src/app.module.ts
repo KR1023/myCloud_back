@@ -23,11 +23,11 @@ import { FileModule } from './file/file.module';
     }),
     TypeOrmModule.forRoot({
         type: 'mysql',
-        host: 'localhost',
-        port: 3306,
-        username: 'root',
-        password: 'xhdtls12',
-        database: 'my_cloud',
+        host: process.env.HOST,
+        port: parseInt(process.env.PORT),
+        username: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_DATABASE,
         entities: [User, Memo, Photo],
         synchronize: true,
         logging: true
