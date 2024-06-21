@@ -11,7 +11,7 @@ GOOGLE_CLIENT_SECRET={google_client_secret}
 - 루트 아래에 다음 구조 생성
 ```
 uploads
- └ explroer
- └ mmeo
+ └ explorer
+ └ memo
  └ photo
 ```
