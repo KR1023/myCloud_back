@@ -5,7 +5,7 @@ import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/user.entity';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MemoModule } from './memo/memo.module';
 import { Memo } from './memo/memo.entity';
 import { join } from 'path';
@@ -21,20 +21,25 @@ import { FileModule } from './file/file.module';
         rootPath: join(__dirname, '..', 'uploads'),
         serveRoot: '/uploads'
     }),
-    TypeOrmModule.forRoot({
-        type: 'mysql',
-        host: process.env.HOST,
-        port: parseInt(process.env.PORT),
-        username: process.env.DB_USERNAME,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_DATABASE,
-        entities: [User, Memo, Photo],
-        synchronize: true,
-        logging: true
+    TypeOrmModule.forRootAsync({
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) => ({
+            type: 'mysql',
+            host: configService.get('DB_HOST'),
+            port: parseInt(configService.get('DB_PORT')),
+            username: configService.get('DB_USERNAME'),
+            password: configService.get('DB_PASSWORD'),
+            database: configService.get('DB_DATABASE'),
+            entities: [User, Memo, Photo],
+            synchronize: true,
+            logging: true
+        })
     }),
     UserModule,
     AuthModule,
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+        isGlobal: true
+    }),
     MemoModule,
     PhotoModule,
     FileModule
