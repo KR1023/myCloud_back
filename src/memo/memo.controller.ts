@@ -14,42 +14,64 @@ export class MemoController {
 
     @Post()
     async createMemo(@Body() memo:CreateMemoDto): Promise<Memo>{
-        // return this.memoService.createMemo(memo);
-        const user = await this.userService.findUser(memo.userEmail);
-        return await this.memoService.createMemo(memo, user);
-        /// return {message: "creating memo is successful", subject: response.subject};
+        try{
+            // return this.memoService.createMemo(memo);
+            const user = await this.userService.findUser(memo.userEmail);
+            return await this.memoService.createMemo(memo, user);
+            /// return {message: "creating memo is successful", subject: response.subject};
+        }catch(e){
+            console.error(e);
+        }
     }
 
     @Post('/list')
     async findMemoList(@Body() req): Promise<Memo[]>{
-        const { userEmail, searchText } = req;
-        return this.memoService.findMemoList(userEmail, searchText);
+        try{
+            const { userEmail, searchText } = req;
+            return this.memoService.findMemoList(userEmail, searchText);
+        }catch(e){
+            console.error(e);
+        }
     }
 
     @Get(":memo_id")
     async findMemo(@Param("memo_id") memo_id: string){
-        return this.memoService.findMemo(parseInt(memo_id));
+        try{
+            return this.memoService.findMemo(parseInt(memo_id));
+        }catch(e){
+            console.error(e);
+        }
     }
 
     @Patch(":memo_id")
     async updateMemo(@Param("memo_id") memoId: string, @Body() updateObj: UpdateMemoDto){
-        return this.memoService.updateMemo(parseInt(memoId), updateObj);
+        try{
+            return this.memoService.updateMemo(parseInt(memoId), updateObj);
+        }catch(e){
+            console.error(e);
+        }
     }
 
     @Delete(":memo_id")
     async deleteMemo(@Param("memo_id") memo_id: string): Promise<any>{
-        await this.memoService.deleteMemo(parseInt(memo_id));
-        return {message: "memo is deleted.", memo_id};
+        try{
+            await this.memoService.deleteMemo(parseInt(memo_id));
+            return {message: "memo is deleted.", memo_id};
+        }catch(e){
+            console.error(e);
+        }
     }
 
     @Post('/upload')
     @UseInterceptors(FileInterceptor('file', multerOption))
     fileUpload(@UploadedFile() file: Express.Multer.File){
-        // const IMG_URL = `${process.env.MEMO_IMAGE_UPLOAD_PATH}\\${file.filename}`;
-        // const IMG_URL = `${join(__dirname, '../..', 'uploads')}/${file.filename}`;
-        const IMG_URL = `http://localhost:4000/uploads/memo/${file.filename}`;
-        return ({url: IMG_URL});
+        try{
+            // const IMG_URL = `${process.env.MEMO_IMAGE_UPLOAD_PATH}\\${file.filename}`;
+            // const IMG_URL = `${join(__dirname, '../..', 'uploads')}/${file.filename}`;
+            const IMG_URL = `http://localhost:4000/uploads/memo/${file.filename}`;
+            return ({url: IMG_URL});
+        }catch(e){
+            console.error(e);
+        }
     }
-
-    
 }

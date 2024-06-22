@@ -8,23 +8,39 @@ export class UserController {
 
     @Get('/:email')
     async findUser(@Param('email') email: string){
-        return await this.userService.findUser(email);
+        try{
+            return await this.userService.findUser(email);
+        }catch(e){
+            console.error(e);
+        }
     }
 
     @Post('/')
     createUser(@Body() user: CreateUserDto){
-        return this.userService.createUser(user);
+        try{
+            return this.userService.createUser(user);
+        }catch(e){
+            console.error(e);
+        }
     }
 
     @Patch('/:email')
     updateUser(@Param('email') email: string, @Body() user: UpdateUserDto){
         console.log(user);
-        return this.userService.updateUser(email, user);
+        try{
+            return this.userService.updateUser(email, user);    
+        }catch(e){
+            console.error(e);
+        }
     }
 
     @Delete('/:email')
     async deleteUser(@Request() req, @Param('email') email: string){
-        req.logout(() => {});
-        return await this.userService.deleteUser(email);
+        try{
+            req.logout(() => {});
+            return await this.userService.deleteUser(email);    
+        }catch(e){
+            console.error(e);
+        }
     }
 }

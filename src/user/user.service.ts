@@ -13,41 +13,61 @@ export class UserService {
     ){}
 
     async findUser(email: string){
-        const result = await this.userRepository.findOne({
-            where: {email}
-        });
-        return result;
+        try{
+            const result = await this.userRepository.findOne({
+                where: {email}
+            });
+            return result;
+        }catch(e){
+            console.error(e);
+        }
     }
 
     createUser(user): Promise<User>{
-        return this.userRepository.save(user);
+        try{
+            return this.userRepository.save(user);
+        }catch(e){
+            console.error(e);
+        }
     }
 
     async updateUser(email: string, _user: UpdateUserDto): Promise<User>{
-        const user: User = await this.findUser(email);
-        console.log(_user);
-        user.username = _user.username;
-        if(_user.password)
-            user.password = bcrypt.hashSync(_user.password, 10);
-
-        console.log(user);
-        return this.userRepository.save(user);
+        try{
+            const user: User = await this.findUser(email);
+            console.log(_user);
+            user.username = _user.username;
+            if(_user.password)
+                user.password = bcrypt.hashSync(_user.password, 10);
+    
+            console.log(user);
+            return this.userRepository.save(user);
+        }catch(e){
+            console.error(e);
+        }
     }
 
     deleteUser(email: string): Promise<DeleteResult>{
-        return this.userRepository.delete({email});
+        try{
+            return this.userRepository.delete({email});
+        }catch(e){
+            console.error(e);
+        }
     }
 
     async findByEmailOrSave(email, username, providerId): Promise<User>{
-        const foundUser = await this.findUser(email);
-        if(foundUser){
-            return foundUser;
+        try{
+            const foundUser = await this.findUser(email);
+            if(foundUser){
+                return foundUser;
+            }
+    
+            const newUser = await this.userRepository.save({
+                email, username, providerId
+            });
+    
+            return newUser;
+        }catch(e){
+            console.error(e);
         }
-
-        const newUser = await this.userRepository.save({
-            email, username, providerId
-        });
-
-        return newUser;
     }
 }
