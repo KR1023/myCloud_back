@@ -8,6 +8,7 @@ GOOGLE_CLIENT_SECRET={google_client_secret}
 KAKAO_ID={kakao_client_id}
 KAKAO_PASS={kakao_client_secret}
 FRONT_ADDRESS={frontend_address}
+RES_ADDR={backend_server_address}
 DB_TYPE={DBMS}
 DB_HOST={DB_HOST(IP)}
 DB_PORT={DB_PORT}

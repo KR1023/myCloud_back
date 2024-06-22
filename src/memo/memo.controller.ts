@@ -7,10 +7,11 @@ import { UserService } from 'src/user/user.service';
 import { Memo } from './memo.entity';
 import { multerOption } from 'src/lib/multer.options.memo';
 import { join } from 'path';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('memo')
 export class MemoController {
-    constructor(private memoService: MemoService, private userService:UserService){}
+    constructor(private memoService: MemoService, private userService:UserService, private configService: ConfigService){}
 
     @Post()
     async createMemo(@Body() memo:CreateMemoDto): Promise<Memo>{
@@ -68,7 +69,7 @@ export class MemoController {
         try{
             // const IMG_URL = `${process.env.MEMO_IMAGE_UPLOAD_PATH}\\${file.filename}`;
             // const IMG_URL = `${join(__dirname, '../..', 'uploads')}/${file.filename}`;
-            const IMG_URL = `http://localhost:4000/uploads/memo/${file.filename}`;
+            const IMG_URL = `${this.configService.get('RES_ADDR')}/uploads/memo/${file.filename}`;
             return ({url: IMG_URL});
         }catch(e){
             console.error(e);
