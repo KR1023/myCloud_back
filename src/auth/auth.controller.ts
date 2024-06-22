@@ -61,8 +61,6 @@ export class AuthController {
         }catch(e){
             console.error(e);
         }
-        
-
     }
 
     @Get('to-kakao')
@@ -79,6 +77,5 @@ export class AuthController {
         }catch(e){
             console.error(e);
         }
-        
     }
 }
