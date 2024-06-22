@@ -9,26 +9,42 @@ export class AuthController {
 
     @Post('register')
     async register(@Body() userDto: CreateUserDto){
-        return await this.authService.register(userDto);
+        try{
+            return await this.authService.register(userDto);
+        }catch(e){
+            console.error(e);
+        }
     }
 
     @UseGuards(LocalAuthGuard)
     @Post('login')
     login(@Request() req){
-        return req.user;
+        try{
+            return req.user;
+        }catch(e){
+            console.error(e);
+        }
     }
     
     @Get('logout')
     logout(@Request() req, @Response() res){
-        req.logout(() => {
-            res.status(200).send({statusCode: 200, message: '로그아웃되었습니다.'});
-        });
+        try{
+            req.logout(() => {
+                res.status(200).send({statusCode: 200, message: '로그아웃되었습니다.'});
+            });
+        }catch(e){
+            console.error(e);
+        }
     }
 
     @UseGuards(AuthenticatedGuard)
     @Get('check-auth')
     testGuardWithSession(@Request() req){
-        return req.user;
+        try{
+            return req.user;
+        }catch(e){
+            console.error(e);
+        }
     }
  
     @Get('to-google')
@@ -40,7 +56,12 @@ export class AuthController {
     async googleAuthRedirect(@Request() req, @Response() res){
         // const { user } = req;
         // return res.send(user)
-        return res.redirect(process.env.FRONT_ADDRESS);
+        try{
+            return res.redirect(process.env.FRONT_ADDRESS);
+        }catch(e){
+            console.error(e);
+        }
+        
 
     }
 
@@ -53,6 +74,11 @@ export class AuthController {
     async kakaoAuthRedirect(@Request() req, @Response() res){
         // const { user } = req;
         // return res.send(user);
-        return res.redirect(process.env.FRONT_ADDRESS);
+        try{
+            return res.redirect(process.env.FRONT_ADDRESS);
+        }catch(e){
+            console.error(e);
+        }
+        
     }
 }
