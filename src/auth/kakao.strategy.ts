@@ -10,7 +10,7 @@ export class KakaoStrategy extends PassportStrategy(Strategy){
         super({
             clientID: process.env.KAKAO_ID,
             clientSecret: process.env.KAKAO_PASS,
-            callbackURL: 'http://localhost:4000/auth/kakao',
+            callbackURL: `${process.env.RES_ADDR}/auth/kakao`,
             scope: ['profile_nickname']
         });
     }
