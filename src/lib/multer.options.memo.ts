@@ -9,6 +9,7 @@ export const multerOption = {
             cb(null, join(__dirname, '../..', 'uploads/memo'));
         },
         filename: (req, file, cb) => {
+            file.originalname = Buffer.from(file.originalname, 'latin1').toString('utf8');
             const ext = extname(file.originalname);
             cb(null, `${basename(file.originalname, ext)}_${Date.now()}${ext}`);
         }

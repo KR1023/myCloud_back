@@ -2,7 +2,7 @@ import { diskStorage } from 'multer';
 import * as fs from 'fs';
 import * as fs_promise from 'fs/promises';
 
-import { join, extname, basename } from 'path';
+import { join } from 'path';
 
 export const multerOption = {
     storage: diskStorage({
@@ -19,6 +19,7 @@ export const multerOption = {
             }
         },
         filename: (req, file, cb) => {
+            file.originalname = Buffer.from(file.originalname, 'latin1').toString('utf8');
             const { userEmail, currDir } = req.body;
             let filename = file.originalname;
             if(fs.existsSync(join(__dirname, '../../uploads/explorer', userEmail, currDir, file.originalname))){
